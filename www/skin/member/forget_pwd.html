@@ -1,0 +1,39 @@
+<form id="forgetForm" class="form-horizontal" name="forgetForm" method="post" action="/member/forget_pwd/find">
+
+<fieldset>
+	<legend><?=$title?></legend>
+	<div class="form-group">
+		<label class="col-md-3 control-label" for="mb_email">이메일</label>
+		<div class="col-md-4">
+			<div class="input-group">
+  				<span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+				<input type="email" id="mb_email" name="mb_email" class="form-control" maxlength="50" />
+			</div>
+		</div>
+	</div>
+	
+	<hr />
+	
+	<p class="text-center">
+		<button type="button" id="btn_find" class="btn btn-lg btn-success">다음</button>
+	</p>
+</fieldset>
+
+</form>
+
+
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate_ext.js'></script>
+<script type='text/javascript'>
+$(document).ready(function() {
+	$('#btn_find').click(function(){
+		if($('#mb_email').val() == ""){
+			alert("이메일을 입력해 주세요.");
+			$('#mb_email').focus();
+			return;
+		}
+		
+		$('#forgetForm').submit();
+	});
+});
+</script>

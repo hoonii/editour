@@ -1,0 +1,225 @@
+<div>
+	<h3>에디투어 발행물 목록</h3>
+</div>
+<form class="form-inline" id="fsearch" name="fsearch" method="get" action="/admin/publishing/index">
+	<div>
+		<p class="pull-left">
+			<input type="text" id="searchSubject" name="searchSubject" class="form-control span3" value="<?=$searchSubject?>" />
+			<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+		</p>
+
+		<p class="pull-right">
+			<select id="searchStatus" name="searchStatus" class="form-control">
+				<option value="ALL" <? if($searchStatus == 'ALL'): ?> selected="selected" <? endif; ?>>전체</option>
+				<option value="01" <? if($searchStatus == '01'): ?> selected="selected" <? endif; ?>>발행중</option>
+				<option value="02" <? if($searchStatus == '02'): ?> selected="selected" <? endif; ?>>심사대기</option>
+				<option value="03" <? if($searchStatus == '03'): ?> selected="selected" <? endif; ?>>반려</option>
+				<option value="04" <? if($searchStatus == '04'): ?> selected="selected" <? endif; ?>>추천</option>
+				<option value="05" <? if($searchStatus == '05'): ?> selected="selected" <? endif; ?>>프리미엄</option>
+			</select>
+		</p>
+	</div>
+	<br/><br/>
+	<div style="margin-top: 10px">
+		<p class="pull-left">
+			<input type="radio" id="orderBy1" name="orderBy" value="1" <? if($orderBy == '1'): ?> checked="checked" <? endif; ?> /> 발행일순
+			&nbsp;&nbsp;
+			<input type="radio" id="orderBy2" name="orderBy" value="2" <? if($orderBy == '2'): ?> checked="checked" <? endif; ?> /> 상태순
+			&nbsp;&nbsp;
+			<input type="radio" id="orderBy3" name="orderBy" value="3" <? if($orderBy == '3'): ?> checked="checked" <?endif; ?> /> 포인트 높은순
+			&nbsp;&nbsp;
+			<input type="radio" id="orderBy4" name="orderBy" value="4" <? if($orderBy == '4'): ?> checked="checked" <? endif; ?> /> 포인트 낮은순
+		</p>
+	</div>
+</form>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th style="text-align: center;">번호</th>
+			<th style="text-align: center;">제목</th>
+			<th style="text-align: center;">발행자</th>
+			<th style="text-align: center;">발행일(발행신청일)</th>
+			<th style="text-align: center;">구매 포인트</th>
+			<th style="text-align: center;">상태</th>
+			<th style="text-align: center;">추천</th>
+			<th style="text-align: center;">프리미엄</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if (count($list) < 1){ ?>
+		<tr>
+			<td colspan="8" style="text-align: center;"">등록된 DATA가 없습니다.</td>
+		</tr>
+		<? } else { ?>
+		<? foreach ($list as $o): ?>
+		<tr>
+			<td style="text-align: center;">
+				<?=$o->num?>
+			</td>
+			<td style="text-align: center;">
+				<a href="javascript:window.open('/admin/publishing/view?seq=<?=$o->seq?>', '', 'width=800, height=500')"><?=$o->subject?></a>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->mb_name?>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->reg_dt?>
+			</td>
+			<td style="text-align: center;">
+				<?
+					if($o->price_division == 'F'){
+						echo "무료";
+					} else {
+						echo $o->price . "P";
+					}
+				?>
+			</td>
+			<td style="text-align: center;">
+				<?
+					if($o->status == '01'){
+						echo "발행중";
+					} else if($o->status == '02'){
+						echo "심사대기";
+					} else if($o->status == '03'){
+						echo "반려";
+					} else if($o->status == '04'){
+						echo "발행중(추천)";
+					} else if($o->status == '05'){
+						echo "발행중(프리미엄)";
+					}
+				?>
+			</td>
+			<td style="text-align: center;">
+				<input type="checkbox" id="status1" name="status1" value="<?= $o->seq ?>_04" <? if($o->status == '04'):?> checked="checked" <? endif;?> />
+			</td>
+			<td style="text-align: center;">
+				<input type="checkbox" id="status2" name="status2" value="<?= $o->seq ?>_05" <? if($o->status == '05'):?> checked="checked" <? endif;?> />
+			</td>
+		</tr>
+		<? endforeach; ?>
+		<? } ?>
+	</tbody>
+</table>
+
+<div class="clearfix">
+	<div style="text-align: center;">
+		<?=$paging->create_links()?>
+	</div>
+</div>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		var searchSubject = '<?=$searchSubject?>';
+		if (searchSubject == '') {
+			$('#searchSubject').val('제목 입력');
+		}
+
+		$("#searchSubject").focus(function() {
+			if ($('#searchSubject').val() == '' || $('#searchSubject').val() == '제목 입력') {
+				$('#searchSubject').val('');
+			}
+		});
+
+		$("#searchSubject").blur(function() {
+			if ($('#searchSubject').val() == '') {
+				$('#searchSubject').val('제목 입력');
+			}
+		});
+		
+		$('#status1').click(function(){
+			var yn = '';
+			if($('#status1').is(':checked')){
+				if($('#status2').is(':checked')){
+					alert('추천과 프리미엄은 동시에 선택을 하실수 없습니다.');
+					$('#status1').attr('checked', false);
+					return;
+				}
+				
+				yn = 'Y';
+			} else {
+				yn = 'N'
+			}
+			
+			update_status($('#status1').val().split('_'), yn);
+		});
+		
+		$('#status2').click(function(){
+			var yn = '';
+			if($('#status2').is(':checked')){
+				if($('#status1').is(':checked')){
+					alert('추천과 프리미엄은 동시에 선택을 하실수 없습니다.');
+					$('#status2').attr('checked', false);
+					return;
+				}
+				
+				yn = 'Y';
+			} else {
+				yn = 'N';
+			}
+			
+			update_status($('#status2').val().split('_'), yn);
+		});
+		
+		$('#searchBtn').click(function(){
+			publishing_search('all');
+		});
+		
+		$('#searchStatus').change(function(){
+			publishing_search('');
+		});
+	});
+
+	function publishing_search(type) {
+		if ($('#searchSubject').val() == '제목 입력') {
+			$('#searchSubject').val('');
+		}
+	
+		if(type == 'all'){
+			var searchSubject = $('#searchSubject').val().replace(/(^\s*)|(\s*$)/g, '');
+	
+			if (searchSubject.length < 1) {
+				alert('검색하실 제목을 입력해 주세요.');
+				$('#searchSubject').focus();
+				return;
+			}
+		}
+
+		$('#fsearch').submit();
+	}
+	
+	function update_status(val, yn){
+		var seq = val[0];
+		var status = val[1];
+		
+		if(yn == 'N'){
+			status = '01';
+		}
+		
+		$.ajax({
+	 		type: 'POST',
+	 		url : '/admin/publishing/update_status',
+	 		data : {
+	 			seq: seq,
+	 			status: status
+	 		},
+	 		success : function(result) {
+	 			if(result > 0){
+	 				if(status == '04'){
+	 					alert('추천 컨텐츠로 등록 되었습니다.');
+	 				} else if(status == '05'){
+	 					alert('프리미엄 컨텐츠로 등록 되었습니다.');
+	 				} else {
+	 					alert('해제 되었습니다.');
+	 				}
+	 				
+	 				publishing_search('');
+	 			}
+	 		},
+	 		error : function() {
+	 			alert('오류가 발생하였습니다.');
+	 		},
+	 		async : false
+	 	});
+	}
+</script>

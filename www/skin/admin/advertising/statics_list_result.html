@@ -1,0 +1,26 @@
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th style="text-align: center;">업체명</th>
+			<th style="text-align: center;">CPI</th>
+			<th style="text-align: center;">노출횟수</th>
+			<th style="text-align: center;">청구 예정 금액</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if (count($list) < 1){ ?>
+		<tr>
+			<td colspan="4" style="text-align: center;"">등록된 DATA가 없습니다.</td>
+		</tr>
+		<? } else { ?>
+		<? foreach ($list as $o): ?>
+		<tr>
+			<td style="text-align: center;"><?=$o->company_name?></td>
+			<td style="text-align: center;">cpi</td>
+			<td style="text-align: center;"><a href="javascript:window.open('/admin/advertising/statics_popup_result?advertising_seq=<?=$o->seq?>&publishing_seq=<?=$o->publishing_seq?>','','width=350, height=300');"><?=$o->cnt?></a></td>
+			<td style="text-align: center;">금액</td>
+		</tr>
+		<? endforeach; ?>
+		<? } ?>
+	</tbody>
+</table>

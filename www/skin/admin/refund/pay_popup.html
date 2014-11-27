@@ -1,0 +1,121 @@
+<input type="hidden" id="seq" value="<?=$seq;?>"/>
+<input type="hidden" id="searchEmail" value="<?=$searchEmail;?>"/>
+
+<table class="table">
+	<tbody>
+		<tr>
+			<td style="width:100px; text-align: left;">환급 신청자</td>
+			<td style="width:10px;"></td>
+			<td><input type="text" id="mb_name" name="mb_name" value="<?=$data['mb_name']?>" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td style="width:100px; text-align: left;">이메일</td>
+			<td style="width:10px;"></td>
+			<td><input type="text" id="mb_email" name="mb_email" value="<?=$data['mb_email']?>" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td style="width:100px; text-align: left;">보유 포인트</td>
+			<td style="width:10px;"></td>
+			<td><input type="text" id="mb_point" name="mb_point" value="<?=$data['mb_point']?>" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td style="width:100px; text-align: left;">환급 포인트</td>
+			<td style="width:10px;"></td>
+			<td><input type="text" id="refund_price" name="refund_price" value="<?=$data['refund_price']?>" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td style="width:100px; text-align: left;">계좌정보</td>
+			<td style="width:10px;"></td>
+			<td>
+				<table>
+					<tr>
+						<td>은&nbsp;&nbsp;행&nbsp;&nbsp;명 : <input type="text" id="bank_name" name="bank_name" value="<?=$data['bank_name']?>" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td>예&nbsp;&nbsp;금&nbsp;&nbsp;주 : <input type="text" id="depositor" name="depositor" value="<?=$data['depositor']?>" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td>계좌번호 : <input type="text" id="account_number" name="account_number" value="<?=$data['account_number']?>" readonly="readonly"/></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:100px; text-align: left;">지급금액</td>
+			<td style="width:10px;"></td>
+			<td><input type="text" id="pay" name="pay" /></td>
+		</tr>
+		<tr>
+			<td style="width:100px; text-align: left;">수수료</td>
+			<td style="width:10px;"></td>
+			<td><input type="text" id="charge" name="charge" readonly="readonly"/></td>
+		</tr>
+	</tbody>
+</table>
+
+<div class="clearfix">
+	<div style="text-align: center;">
+		<button type="button" id="btn_refund" class="btn btn-danger">환급완료</button>
+	</div>
+</div>
+
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$('#pay').change(function(){
+			var pay = $('#pay').val();
+			
+			var re = /[\D]/g;
+			
+			if (re.test(pay)) {
+				alert("지급금액은 숫자만 입력해 주세요.");
+				$('#pay').focus();
+				return;
+			}
+			
+			//var charge = Math.floor(parseInt(pay) * 0.1);
+			var charge = 500;
+			
+			$('#charge').val(charge);
+		});
+		
+		$('#btn_refund').click(function(){
+			if($('#pay').val() == ""){
+				alert("지급 금액을 입력해 주세요.");
+				$('#pay').focus();
+				return;
+			}
+			if($('#charge').val() == ""){
+				alert("수수료를 입력해 주세요.");
+				$('#charge').focus();
+				return;
+			}
+			
+			if(confirm("환급 완료를 승인 하시겠습니까?")){
+				$.ajax({
+			 		type: 'POST',
+			 		url : '/admin/refund/refund_complete',
+			 		data : {
+			 			seq: $('#seq').val(),
+			 			mb_email: $('#searchEmail').val(),
+			 			pay: $('#pay').val(),
+			 			charge: $('#charge').val(),
+			 			refund_price: $('#refund_price').val(),
+			 			mb_point: $('#mb_point').val(),
+			 			status: "03",
+			 			comment: "포인트 환급"
+			 		},
+			 		success : function(result) {
+			 			alert("환급 완료 처리 되었습니다.");
+			 			
+			 			opener.location.reload();
+			 			self.close();
+			 		},
+			 		error : function() {
+			 			alert('오류가 발생하였습니다.');
+			 		},
+			 		async : false
+			 	});
+			}
+		});
+	});
+</script>

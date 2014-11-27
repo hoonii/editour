@@ -1,0 +1,125 @@
+<p style="margin-left: 10px;">지역설정</p>
+<table class="table table-condensed" style="margin-left: 10px;">
+	<tr>
+	    <td>
+	    	<input value="<?=$view['area1']?>" readonly="readonly"/>
+	    	<input value="<?=$view['area2']?>" readonly="readonly"/>
+	    	<input value="<?=$view['area3']?>" readonly="readonly"/>
+	    </td>
+	</tr>
+</table>
+
+<br /><br />
+
+<p style="margin-left: 10px;">카테고리 설정</p>
+<table class="table table-condensed" style="margin-left: 10px;">
+	<tr>
+	    <td>
+	    	<input value="<?=$view['category1']?>" readonly="readonly"/>
+	    	<input value="<?=$view['category2']?>" readonly="readonly"/>
+	    	<input value="<?=$view['category3']?>" readonly="readonly"/>
+	    </td>
+	</tr>
+</table>
+
+<br /><br />
+
+<p style="margin-left: 10px;">키워드 설정</p>
+<table class="table table-condensed" style="margin-left: 10px;">
+	<tr>
+	    <td>
+	    	<?	
+	    		$i = 0;
+	    		foreach($keywords as $key) :
+					$i++;
+					echo $key['keyword'];
+					if($i < count($keywords)){
+						echo ",";
+					}
+	    		endforeach;
+	    	?>
+	    </td>
+	</tr>
+</table>
+
+<br /><br />
+
+<p style="margin-left: 10px;">발행가격</p>
+<table class="table table-condensed" style="margin-left: 10px;">
+	<tr>
+	    <td valign="middle">
+	    	<? if($view['price_division'] == 'F'){ ?>
+				무료
+			<? } else { ?>
+				유료
+				&nbsp;&nbsp;
+				<input value="<?=$view['price']?>P" readonly="readonly"/>
+			<? }?>
+	    </td>
+	</tr>
+</table>
+
+<br /><br />
+
+<table class="table table-condensed table-striped" style="margin-left: 10px;">
+	<tr>
+	    <td valign="middle">미리보기</td>
+	    <td valign="middle">미리보기</td>
+	    <td valign="middle">미리보기</td>
+	    <td valign="middle">미리보기</td>
+	</tr>
+</table>
+
+<div style="text-align: center;">
+	<button type="button" id="btn_return" class="btn btn-lg btn-danger">
+		<span class="glyphicon glyphicon-pencil"></span> 반려
+	</button>
+	
+	<button type="button" id="btn_success" class="btn btn-lg btn-success">
+		<span class="glyphicon glyphicon-pencil"></span> 승인
+	</button>
+	
+	<button type="button" id="btn_close" class="btn btn-lg btn-default">
+		<span class="glyphicon glyphicon-pencil"></span> 닫기
+	</button>
+</div>
+
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$('#btn_close').click(function(){
+			self.close();
+		});
+		
+		$('#btn_return').click(function(){
+			var seq = '<?=$seq;?>';
+			window.open('/admin/publishing/return_reason?seq=' + seq,'','width=500, height=400');
+		});
+		
+		$('#btn_success').click(function(){
+			var seq = '<?=$seq;?>';
+			
+			if(confirm("승인 처리 하시겠습니까?")){
+				$.ajax({
+			 		type: 'POST',
+			 		url : '/admin/publishing/update_status',
+			 		data : {
+			 			seq: seq,
+			 			status: "01"
+			 		},
+			 		success : function(result) {
+			 			if(result > 0){
+			 				alert('승인 처리 되었습니다.');
+			 			}
+			 			
+			 			opener.publishing_search('');
+			 			self.close();
+			 		},
+			 		error : function() {
+			 			alert('오류가 발생하였습니다.');
+			 		},
+			 		async : false
+			 	});
+			}
+		});
+	});
+</script>

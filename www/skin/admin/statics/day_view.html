@@ -1,0 +1,28 @@
+<script type='text/javascript'>
+$(document).ready(function() {
+	var data1 = '<?= json_encode($s1); ?>';
+	data1 = data1.replace(/\"/gi, "");
+	var sp1 = data1.split(",");
+	var s1 = Array();
+	for(var i=0; i<sp1.length; i++){
+		s1.push(parseInt(sp1[i]));
+	}
+	
+	var ticks = '<?= json_encode($x); ?>';
+	ticks = ticks.replace(/\"/gi, "");
+	var x = ticks.split(",");
+	
+    plot2 = $.jqplot('chart', [s1], {
+        seriesDefaults: {
+            renderer:$.jqplot.BarRenderer,
+            pointLabels: { show: true }
+        },
+        axes: {
+            xaxis: {
+                renderer: $.jqplot.CategoryAxisRenderer,
+                ticks: x
+            }
+        }
+    });
+});
+</script>

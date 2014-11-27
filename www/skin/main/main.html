@@ -1,0 +1,437 @@
+
+<script>
+	$(function() {
+		initMainPage();
+	});
+
+	function initMainPage() {
+		changeBgSize();
+		$(window).resize(changeBgSize);
+		$('#main_search_box').mouseenter(function() {
+			$('#main_search_box').addClass('focus');
+			$('#main_search_input>input').addClass('focus');
+		}).mouseleave(function() {
+			$('#main_search_box').removeClass('focus');
+			$('#main_search_input>input').removeClass('focus');
+		});
+		$('#main_search_icon img').mouseover(function() {
+			$(this).attr('src', '/images/common/main_search_icon_over.png');
+		}).mouseout(function() {
+			$(this).attr('src', '/images/common/main_search_icon.png');
+		});
+		$('.main_content .arrow_left>img').click(function() {
+			$obj = $(this).parent().next().find('.info_box_group');
+			maxPos = $obj.find('.info_box').size() * 296 - 875 - 13;
+			objLeft = $obj.css('left');
+			objLeft = parseInt(objLeft.replace(/[^0-9|-]/g, ''));
+			if (maxPos + objLeft > 0) {
+				$obj.animate({
+					left : "-=296"
+				}, 500, function() {
+				});
+			} else {
+				$obj.css('left', '0');
+			}
+		});
+		$('.main_content .arrow_right>img').click(function() {
+			$obj = $(this).parent().prev().find('.info_box_group');
+			maxPos = $obj.find('.info_box').size() * 296 - 875 - 13;
+			objLeft = $obj.css('left');
+			objLeft = parseInt(objLeft.replace(/[^0-9|-]/g, ''));
+			if (objLeft < 0) {
+				$obj.animate({
+					left : "+=296"
+				}, 500, function() {
+				});
+			} else {
+				//$obj.animate({left: -maxPos}, 500, function() {});
+				temp = -maxPos;
+				$obj.css('left', temp);
+			}
+		});
+		initInfoBox();
+		setInterval(sildeInfoBox, 3000);
+	}
+
+	function sildeInfoBox() {
+		$obj = $('#main_content3 .arrow_left>img').parent().next().find('.info_box_group');
+		maxPos = $obj.find('.info_box').size() * 296 - 875 - 13;
+		objLeft = $obj.css('left');
+		objLeft = parseInt(objLeft.replace(/[^0-9|-]/g, ''));
+		if (maxPos + objLeft > 0) {
+			$obj.animate({
+				left : "-=296"
+			}, 500, function() {
+			});
+		} else {
+			//$obj.animate({left: "0"}, 500, function() {});
+			$obj.css('left', '0');
+		}
+	}
+
+	function changeBgSize() {
+		docWidth = $(document).width();
+		if (docWidth > 1960) {
+			$('#main_image').css('background-size', docWidth);
+		}
+	}
+</script>
+<style>
+/* Main image */
+#main_image {
+	width: 100%;
+	min-width: 980px;
+	background: url(/images/home/main_image.jpg) center;
+	background-size: 1960px;
+}
+
+#main_image>div {
+	width: 980px;
+	margin: auto;
+	height: 474px;
+	position: relative;
+}
+
+#main_image_text {
+	position: absolute;
+	top: 128px;
+	left: 177px;
+}
+
+/* Main search box */
+#main_search_box {
+	width: 719px;
+	height: 75px;
+	position: absolute;
+	top: 214px;
+	left: 129px;
+	background: url(/images/common/main_search_box.png);
+}
+
+#main_search_box.focus {
+	background: url(/images/common/main_search_box_active.png);
+}
+
+#main_search_input>input {
+	width: 627px;
+	height: 34px;
+	margin: 21px 0 0 19px;
+	font-size: 16px;
+	font-weight: 700;
+	color: #FFF;
+	background-color: transparent;
+	border: none;
+	outline-style: none;
+}
+
+#main_search_input>input.focus {
+	color: #0399ac;
+}
+
+#main_search_icon {
+	position: absolute;
+	top: 21px;
+	right: 19px;
+}
+
+#main_search_icon>img {
+	cursor: pointer;
+}
+
+/* Main content */
+.main_content {
+	width: 100%;
+	min-width: 980px;
+}
+
+.main_content>div {
+	width: 980px;
+	margin: auto;
+	height: 340px;
+}
+
+.main_content h4 {
+	font-size: 15px;
+	margin: 0;
+	padding: 0 0 0 52px;
+	height: 62px;
+	line-height: 62px;
+}
+
+.main_content>div>div {
+	overflow: hidden;
+}
+
+#main_content1 {
+	background: #FFF;
+}
+
+#main_content2 {
+	background: #e9e9e9;
+}
+
+#main_content3 {
+	background: #8b9db1;
+}
+
+.arrow_left,.arrow_right,.info_box_group_view {
+	float: left;
+	height: 236px;
+}
+
+.arrow_left,.arrow_right {
+	width: 22px;
+	margin: 95px 15px 0 15px;
+	cursor: pointer;
+}
+
+.info_box_group_view {
+	width: 875px;
+	overflow: hidden;
+	position: relative;
+}
+
+.info_box_group {
+	width: 2000px;
+	overflow-x: visible;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+</style>
+
+
+<div id="main_image">
+	<div>
+		<div id="main_image_text">
+			<img src="/images/home/main_image_text.png" width="583" height="75" alt=" " />
+		</div>
+		<div id="main_search_box">
+			<div id="main_search_input">
+				<input type="text" />
+			</div>
+			<div id="main_search_icon">
+				<a href="#"><img src="/images/common/main_search_icon.png" width="34" height="34" alt=" " /></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="main_content1" class="main_content">
+	<div>
+		<h4>에디투어 추천 컨텐츠 !!!</h4>
+		<div>
+			<div class="arrow_left">
+				<img src="/images/home/arrow_left.png" width="20" height="33" alt=" " />
+			</div>
+			<div class="info_box_group_view">
+				<div class="info_box_group">
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="arrow_right">
+				<img src="/images/home/arrow_right.png" width="20" height="33" alt=" " />
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="main_content2" class="main_content">
+	<div>
+		<h4>HOT! 인기 컨텐츠</h4>
+		<div>
+			<div class="arrow_left">
+				<img src="/images/home/arrow_left.png" width="20" height="33" alt=" " />
+			</div>
+			<div class="info_box_group_view">
+				<div class="info_box_group">
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="arrow_right">
+				<img src="/images/home/arrow_right.png" width="20" height="33" alt=" " />
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="main_content3" class="main_content">
+	<div>
+		<h4>프리미엄 컨텐츠</h4>
+		<div>
+			<div class="arrow_left">
+				<img src="/images/home/arrow_left2.png" width="20" height="33" alt=" " />
+			</div>
+			<div class="info_box_group_view">
+				<div class="info_box_group">
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+					<div class="info_box">
+						<div class="cover"></div>
+						<div class="thumb_img">
+							<img src="/images/common/thumb_sample.jpg" alt=" " />
+						</div>
+						<div class="thumb_title">하와이 쉐라톤호텔 이용기</div>
+						<div class="thumb_desc">
+							<div class="thumb_tag">하와이 / 호텔 / 이용후기</div>
+							<div class="thumb_price">55,900원</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="arrow_right">
+				<img src="/images/home/arrow_right2.png" width="20" height="33" alt=" " />
+			</div>
+		</div>
+	</div>
+</div>

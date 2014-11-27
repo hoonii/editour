@@ -1,0 +1,36 @@
+<form id="flogin" class="form-horizontal" name="flogin" method="post" action="/admin/login/in">
+<input type="hidden" name="url" value="" />
+
+	<h3 style="text-align: center;"><?=$title?></h3>
+
+	<div class="form-group">
+		<label class="col-md-3 control-label"></label>
+		<div class="col-md-9">
+			이메일 : 
+			<input type="text" id="mb_email" name="mb_email" class="form-control span3" maxlength="20"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			비밀번호 : 
+			<input type="password" id="mb_password" name="mb_password" class="form-control span3" maxlength="20" />
+		</div>
+	</div>
+	
+	<button type="submit" class="btn btn-primary">로그인</button>
+
+</form>
+
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate_ext.js'></script>
+<script type='text/javascript'>
+$(function() {
+	$('#flogin').validate({
+		rules: {
+			mb_email: { required:true, minlength:3},
+			mb_password: 'required'
+		},
+		messages: {
+			mb_email: { required:'이메일을 입력하세요.', minlength:'최소 3자 이상 입력하세요.' },
+			mb_password: '비밀번호를 입력하세요.'
+		}
+	});
+});
+</script>

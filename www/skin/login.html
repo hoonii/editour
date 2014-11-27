@@ -1,0 +1,48 @@
+<style>
+::-webkit-input-placeholder{color:#0098ab;}
+:-moz-placeholder{color:#0098ab;}
+::-moz-placeholder{color:#0098ab;}
+:-ms-input-placeholder{color:#0098ab;}
+#login_box{width:978px;height:193px;padding-top:48px;}
+#login_box>div{width:500px;margin:auto;text-align:center;margin-bottom:9px;}
+#login_box input{width:468px;height:33px;font-size:14px;font-weight:700;color:#0098ab;border:1px solid #84888d;padding:0 15px;}
+#login_box .login_btn{margin-top:38px;}
+#func_btn_box{width:978px;height:65px;border-top:none;text-align:center;padding-top:20px;}
+
+</style>
+
+<form id="flogin" class="form-horizontal" name="flogin" method="post" action="/login/in">
+<div id="content">
+	<div>
+		<h4>LOG-IN<div class="breadcrumb"><a href="#">Editour</a> &gt; 로그인</div></h4>
+		<div id="login_box" class="content_box1">
+			<div><input type="text" id="mb_email" name="mb_email" placeholder="ID(등록하신 이메일)을 입력해주세요" /></div>
+			<div><input type="password" id="mb_password" name="mb_password" placeholder="PASSWORD를 입력해주세요" /></div>
+			<div class="login_btn"><div class="content_btn1 type1" id="btn_login">로그인</div></div>
+		</div>
+		<div id="func_btn_box" class="content_box1">
+			<div class="content_btn1 type2">회원가입</div>
+			<div class="content_btn1 type2">PASSWORD 찾기</div>
+		</div>
+	</div>
+</div>
+</form>
+
+<script type='text/javascript'>
+$(document).ready(function() {
+	$('#btn_login').click(function(){
+		if($('#mb_email').val() == ""){
+			alert('이메일을 입력해 주세요.');
+			$('#mb_email').focus();
+			return;
+		}
+		if($('#mb_password').val() == ""){
+			alert('패스워드를 입력해 주세요.');
+			$('#mb_password').focus();
+			return;
+		}
+		
+		$('#flogin').submit();
+	});
+});
+</script>

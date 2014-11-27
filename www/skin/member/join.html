@@ -1,0 +1,168 @@
+<form id="fjoin" class="form-horizontal" name="fjoin" method="post" action="/member/join/update">
+<input type="hidden" name="token" value="<?=$token?>" />
+
+<fieldset>
+	<legend><?=$title?></legend>
+	<div class="form-group">
+		<label class="col-md-3 control-label" for="mb_name"><span class="glyphicon glyphicon-exclamation-sign"></span> 이름</label>
+		<div class="col-md-9">
+			<input type="text" id="mb_name" name="mb_name" class="form-control span3" maxlength="10" value="" />
+			공백없이 한글만 입력 가능
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-md-3 control-label" for="reg_mb_email"><span class="glyphicon glyphicon-exclamation-sign"></span> 이메일</label>
+		<div class="col-md-4">
+			<div class="input-group">
+  				<span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+				<input type="email" id="mb_email" name="mb_email" class="form-control" maxlength="50" value=""/>
+			</div>
+		</div>
+		<div class="col-md-5">
+			<button type="button" id="btn_email" class="btn btn-info" data-loading-text="확인 중...">중복확인</button>
+			<span id="msg_mb_email"></span>
+			<span id="msg_mb_email_code" style="display:none"></span>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-md-3 control-label" for="mb_tel"><span class="glyphicon glyphicon-exclamation-sign"></span>전화번호</label>
+		<div class="col-md-3">
+			<input type="tel" id="mb_tel" name="mb_tel" class="form-control" maxlength="14" value=""/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-md-3 control-label" for="mb_birth">생년월일</label>
+		<div class="col-md-3">
+			<div class="input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				<input type="text" id="mb_birth" name="mb_birth" class="form-control" maxlength="10" readonly="readonly" value=""/>
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-md-3 control-label" for="mb_password"><span class="glyphicon glyphicon-exclamation-sign"></span> 비밀번호</label>
+		<div class="col-md-9">
+			<input type="password" id="mb_password" name="mb_password" class="form-control span3" maxlength="16" value=""/> 8 ~ 16자
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-3 control-label" for="mb_password_re"><span class="glyphicon glyphicon-exclamation-sign"></span> 비밀번호 확인</label>
+		<div class="col-md-9">
+			<input type="password" id="mb_password_re" name="mb_password_re" class="form-control span3" maxlength="16"  value=""/>
+		</div>
+	</div>
+	
+	
+	<h5>회원가입약관</h5>
+	<textarea class="form-control" rows="5" readonly="readonly"><?=$stipulation?></textarea>
+	<br/>
+
+	<div class="form-group" data-toggle="buttons">
+		<label id="agree" class="btn btn-sm btn-default">
+			<input type="checkbox" id="agree" name="agree" value="1" />
+			<span class="glyphicon glyphicon-unchecked"></span> 회원가입약관을 읽었으며 내용에 동의합니다.
+		</label>
+	</div>
+
+	<br/><br/>
+
+	<h5>개인정보취급방침</h5>
+	<textarea class="form-control" rows="5" readonly="readonly"><?=$privacy?></textarea>
+	<br/>
+
+	<div class="form-group" data-toggle="buttons">
+		<label id="" class="btn btn-sm btn-default">
+			<input type="checkbox" id="agree2" name="agree2" value="1" />
+			<span class="glyphicon glyphicon-unchecked"></span> 개인정보취급방침을 읽었으며 내용에 동의합니다.
+		</label>
+	</div>
+	
+
+	<hr />
+	
+	<p class="text-center">
+		<!-- <button type="submit" class="btn btn-lg btn-success">가입</button> -->
+		<button type="button" id="btn_join" class="btn btn-lg btn-success">가입</button>
+	</p>
+</fieldset>
+
+</form>
+
+
+<script type='text/javascript' src='<?=JS_DIR?>/md5.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/kcaptcha.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate_ext.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate_reg.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/datepicker.js'></script>
+<script type='text/javascript'>
+$(document).ready(function() {
+	var year = new Date().getFullYear();
+	$('#mb_birth').datepicker({yearRange:(year-60)+':'+year});
+	
+	$('#mb_email').change(function(){
+		$('#msg_mb_email').text('');
+		$('#msg_mb_email_code').text('');
+	});
+
+	$('#btn_join').click(function(){
+		if($('#mb_name').val() == ""){
+			alert("이름을 입력해 주세요.");
+			$('#mb_name').focus();
+			return;
+		}
+		if($('#mb_email').val() == ""){
+			alert("이메일을 입력해 주세요.");
+			$('#mb_email').focus();
+			return;
+		}
+		if($('#mb_tel').val() == ""){
+			alert("전화번호를 입력해 주세요.");
+			$('#mb_tel').focus();
+			return;
+		}
+		var re = /[\D]/g;
+		if (re.test($('#mb_tel').val())) {
+			alert("전화번호는 숫자만 입력해 주세요.");
+			$('#mb_tel').focus();
+			return;
+		}
+		if($('#mb_birth').val() == ""){
+			alert("생년월일을 선택해 주세요.");
+			$('#mb_birth').focus();
+			return;
+		}
+		if($('#mb_password').val() == ""){
+			alert("비밀번호를 입력해 주세요.");
+			$('#mb_password').focus();
+			return;
+		}
+		if($('#mb_password').val() != $('#mb_password_re').val()){
+			alert("비밀번호가 일치하지 않습니다.");
+			$('#mb_password').focus();
+			return;
+		}
+		if(!$("input:checkbox[name='agree']").is(':checked')){
+			alert("회원 가입 약관에 동의해 주세요.");
+			return;
+		}
+		
+		if(!$("input:checkbox[name='agree2']").is(':checked')){
+			alert("개인정보취급방침에 동의해 주세요.");
+			return;
+		}
+		
+		if($('#msg_mb_email_code').text() != '4'){
+			alert("이메일 중복확인을 해 주세요.");
+			return;
+		}
+		
+		$('#fjoin').submit();
+		
+	});
+});
+</script>

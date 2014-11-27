@@ -1,0 +1,59 @@
+<link rel="stylesheet" type="text/css" href="<?=JS_DIR?>/plugin/menubar/css/menu.css">
+<script type="text/javascript" src="<?=JS_DIR?>/plugin/menubar/custom.js"></script>
+
+<header>
+	<div class="container_1">
+		<div class="navbar navbar-static-top">
+			<div class="navigation">
+				<nav>
+					<ul class="nav topnav bold">
+						<li class="dropdown"><a href="/admin/member/index">회원관리 <i class="icon-angle-down"></i></a>
+							<ul class="dropdown-menu bold">
+								<li><a href="/admin/member/index">사용자 목록</a></li>
+								<li><a href="/admin/publisher/index">발행자 목록</a></li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href="/admin/publishing/index">발행관리 <i class="icon-angle-down"></i></a>
+							<ul class="dropdown-menu bold">
+								<li><a href="/admin/publishing/index">발행물 목록</a></li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href="/admin/statics/index">통계 <i class="icon-angle-down"></i></a></li>
+						<li class="dropdown"><a href="/admin/publishing/sale">판매현황 <i class="icon-angle-down"></i></a>
+							<ul class="dropdown-menu bold">
+								<li><a href="/admin/publishing/sale">발행물 별 판매현황</a></li>
+								<li class="dropdown"><a href="/admin/publisher/sale">발행자 별 판매현황<i class="icon-angle-right"></i></a>
+									<ul style="display: none;" class="dropdown-menu sub-menu-level1 bold">
+										<li><a href="/admin/refund/index">환급현황</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href="/admin/coupon/index">쿠폰관리 <i class="icon-angle-down"></i></a>
+							<ul class="dropdown-menu bold">
+								<li><a href="/admin/coupon/index">발행 쿠폰 현황</a></li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href="/admin/advertising/index">광고관리 <i class="icon-angle-down"></i></a>
+							<ul class="dropdown-menu bold">
+								<li><a href="/admin/advertising/index">광고 등록 목록</a></li>
+								<li><a href="/admin/advertising/statics_list">광고 통계</a></li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href="/admin/notice/user">알림관리 <i class="icon-angle-down"></i></a>
+							<ul class="dropdown-menu bold">
+								<li><a href="/admin/notice/user">사용자 공지사항</a></li>
+								<li><a href="/admin/faq/user">사용자 FAQ</a></li>
+								<li><a href="/admin/notice/publisher">발행자 공지사항</a></li>
+								<li><a href="/admin/faq/publisher">발행자 FAQ</a></li>
+								<li><a href="/admin/news">보도자료</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</header>
+
+<div class="container">

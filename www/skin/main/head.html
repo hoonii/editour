@@ -1,0 +1,50 @@
+<script type='text/javascript'>
+$(document).ready(function() {
+	$('#btn_logout').click(function(){
+		location.href = "/login/out";
+	});
+});
+</script>
+
+<div id="header1">
+	<div>
+		<img src="/images/common/header1_image.png" width="460" height="87" alt=" " />
+	</div>
+</div>
+<div id="header2">
+	<div>
+		<div id="menu_editour">Editour</div>
+		<div id="menu_publish_center">
+			<div id="menu_publish_center_title">발행센터</div>
+			<div id="submenu_publish_center">
+				<ul>
+					<li>발행센터</li>
+					<li>알립니다</li>
+				</ul>
+			</div>
+		</div>
+		
+		<?	if(!IS_MEMBER) {?>
+		<div id="menu_user">
+			<a href="/login">로그인</a> / <a href="/member/join">회원가입</a>
+		</div>
+		<?	} else {?>
+		<div id="menu_user_in">
+			<div id="menu_user_in_title">
+				<div id="user_photo"><img src="/images/user/user_photo_sample.png" width="48" height="48" alt=" " /></div>
+				<div id="user_name">박근우님</div>
+				<div id="user_arrow_down"><img src="/images/common/arrow_down.png" width="21" height="11" alt=" " /></div>
+			</div>
+			<div id="submenu_user_in">
+				<ul>
+					<li>찜목록</li>
+					<li>구매목록</li>
+					<li>내포인트</li>
+					<li>회원정보수정</li>
+					<li id="btn_logout">로그아웃</li>
+				</ul>
+			</div>
+		</div>
+		<?	} ?>		
+	</div>
+</div>

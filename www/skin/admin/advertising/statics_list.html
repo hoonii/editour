@@ -1,0 +1,146 @@
+<div>
+	<h3>광고 통계 - 목록</h3>
+</div>
+
+<div>
+	<input type="text" id="s_dt" readonly="readonly" style="margin:5px;" value=""/>
+	~
+	<input type="text" id="e_dt" readonly="readonly" style="margin:5px;" value=""/>
+	&nbsp;&nbsp;&nbsp;
+	<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+</div>
+
+<br />
+
+<div id="tabs" class="ui-tabs">
+	<ul>
+		<li><a href="#tabs-1" id="li_list">목록</a></li>
+		<li><a href="#tabs-2" id="li_graph">그래프</a></li>
+	</ul>
+	<div id="tabs-1"></div>
+	<div id="tabs-2"></div>
+</div>
+
+<div>
+	<p class="pull-right">
+		<select id="company_name" name="company_name" class="form-control">
+			<option value="">업체전체</option>
+			<? foreach ($list as $o): ?>
+			<option value="<?=$o->company_name?>"><?=$o->company_name?></option>
+			<? endforeach; ?>
+		</select>
+	</p>
+</div>
+
+<div id="div_list" style="margin-top:20px; margin-left:20px; width:100%; height:500px;"></div>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+
+<link class="include" rel="stylesheet" type="text/css" href="/js/plugin/jqplot/jquery.jqplot.min.css" />
+<script class="include" type="text/javascript" src="/js/plugin/jqplot/jquery.jqplot.min.js"></script>
+<script class="include" type="text/javascript" src="/js/plugin/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+<script class="include" type="text/javascript" src="/js/plugin/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+<script class="include" type="text/javascript" src="/js/plugin/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script class="include" type="text/javascript" src="/js/plugin/jqplot/plugins/jqplot.pointLabels.min.js"></script>
+
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$("#tabs").tabs().removeClass("ui-widget ui-widget-content ui-corner-all");
+		$("#tabs ul").removeClass("ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all");
+		
+		$('#tabs').tabs({ active: 0 });
+		
+		$("#li_list").click(function(){
+			location.href = "/admin/advertising/statics_list";
+		});
+		$("#li_graph").click(function(){
+			location.href = "/admin/advertising/statics_graph";
+		});
+		
+		$("#s_dt").datepicker({
+		      showOn: "button",
+		      buttonImage: "/img/calendar.gif",
+		      buttonImageOnly: true,
+		      buttonText: "날짜선택"
+	    });
+		
+		$("#e_dt").datepicker({
+		      showOn: "button",
+		      buttonImage: "/img/calendar.gif",
+		      buttonImageOnly: true,
+		      buttonText: "날짜선택"
+	    });
+		
+		$('#searchBtn').click(function(){
+			var s = $('#s_dt').val();
+			var e = $('#e_dt').val();
+			
+			if(s == "" || e == ""){
+				alert("통계를 조회할 날짜를 선택해 주세요.");
+				return;
+			}
+			
+			var sArr = s.split("-");
+			var eArr = e.split("-");
+			
+			var sdate = new Date(sArr[0], sArr[1], sArr[2]);
+			var edate = new Date(eArr[0], eArr[1], eArr[2]);
+			
+			var url = "";
+			
+			if(sdate.getTime() > edate.getTime()){
+				alert("날짜 선택이 잘못 되었습니다. 다시 선택해 주세요.");
+				return;
+			}
+			
+			$.ajax({
+		 		type: 'POST',
+		 		url : '/admin/advertising/statics_list_result',
+		 		datatype: 'json',
+		 		data : {
+		 			company_name: $('#company_name').val(),
+		 			s_dt: s,
+		 			e_dt: e
+		 		},
+		 		success : function(result) {
+		 			$('#div_list').html(result);
+		 		},
+		 		error : function() {
+		 			alert('오류가 발생하였습니다.');
+		 		},
+		 		async : false
+		 	});
+		});
+		
+		/*
+		var s1 = [2, 6, 7, 10];
+        var s2 = [7, 5, 3, 2];
+        var ticks = ['a', 'b', 'c', 'd'];
+        
+        plot2 = $.jqplot('chart2', [s1, s2], {
+            seriesDefaults: {
+                renderer:$.jqplot.BarRenderer,
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks
+                }
+            }
+        });
+    
+        $('#chart2').bind('jqplotDataHighlight', 
+            function (ev, seriesIndex, pointIndex, data) {
+                $('#info2').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+            }
+        );
+            
+        $('#chart2').bind('jqplotDataUnhighlight', 
+            function (ev) {
+                $('#info2').html('Nothing');
+            }
+        );
+        */
+	});
+</script>

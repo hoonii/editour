@@ -1,0 +1,111 @@
+<div>
+	<h3>발행물 별 판매 현황</h3>
+</div>
+<form class="form-inline" id="fsearch" name="fsearch" method="get" action="/admin/publishing/sale">
+	<div>
+		<p class="pull-left">
+			<input type="text" id="searchKeyword" name="searchKeyword" class="form-control span3" style="width:300px;" value="<?=$searchKeyword?>" />
+			<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+		</p>
+	</div>
+</form>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th style="text-align: center;">번호</th>
+			<th style="text-align: center;">제목</th>
+			<th style="text-align: center;">발행자</th>
+			<th style="text-align: center;">이메일</th>
+			<th style="text-align: center;">발행일</th>
+			<th style="text-align: center;">판매수</th>
+			<th style="text-align: center;">누적 판매 포인트</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if (count($list) < 1){ ?>
+		<tr>
+			<td colspan="7" style="text-align: center;"">등록된 DATA가 없습니다.</td>
+		</tr>
+		<? } else { ?>
+		<? foreach ($list as $o): ?>
+		<tr>
+			<td style="text-align: center;">
+				<?=$o->num?>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->subject?>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->mb_name?>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->mb_email?>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->reg_dt?>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->sale_cnt?>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->sale_price?>P
+			</td>
+		</tr>
+		<? endforeach; ?>
+		<? } ?>
+	</tbody>
+</table>
+
+<div class="clearfix">
+	<div style="text-align: center;">
+		<?=$paging->create_links()?>
+	</div>
+</div>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		var searchKeyword = '<?=$searchKeyword?>';
+		if (searchKeyword == '') {
+			$('#searchKeyword').val('제목, 혹은 발행자 이름, 혹은 발행자 이메일');
+		}
+
+		$("#searchKeyword").focus(function() {
+			if ($('#searchKeyword').val() == '' || $('#searchKeyword').val() == '제목, 혹은 발행자 이름, 혹은 발행자 이메일') {
+				$('#searchKeyword').val('');
+			}
+		});
+
+		$("#searchKeyword").blur(function() {
+			if ($('#searchKeyword').val() == '') {
+				$('#searchKeyword').val('제목, 혹은 발행자 이름, 혹은 발행자 이메일');
+			}
+		});
+		
+		$('#searchBtn').click(function(){
+			publishing_search('all');
+		});
+		
+		$('#searchStatus').change(function(){
+			publishing_search('');
+		});
+	});
+
+	function publishing_search(type) {
+		if ($('#searchKeyword').val() == '제목, 혹은 발행자 이름, 혹은 발행자 이메일') {
+			$('#searchKeyword').val('');
+		}
+	
+		if(type == 'all'){
+			var searchKeyword = $('#searchKeyword').val().replace(/(^\s*)|(\s*$)/g, '');
+	
+			if (searchKeyword.length < 1) {
+				alert('검색하실 검색어를 입력해 주세요.');
+				$('#searchKeyword').focus();
+				return;
+			}
+		}
+
+		$('#fsearch').submit();
+	}
+</script>

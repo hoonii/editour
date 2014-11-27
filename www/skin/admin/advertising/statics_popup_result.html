@@ -1,0 +1,22 @@
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th style="text-align: center;">제목</th>
+			<th style="text-align: center;">노출횟수</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if (count($list) < 1){ ?>
+		<tr>
+			<td colspan="2" style="text-align: center;"">등록된 DATA가 없습니다.</td>
+		</tr>
+		<? } else { ?>
+		<? foreach ($list as $o): ?>
+		<tr>
+			<td style="text-align: center;"><?=$o->subject?></td>
+			<td style="text-align: center;"><?=$o->cnt?></td>
+		</tr>
+		<? endforeach; ?>
+		<? } ?>
+	</tbody>
+</table>

@@ -1,0 +1,58 @@
+<div>
+	<h3>
+		<?=$title;?>
+	</h3>
+</div>
+
+<form id="fwrite" class="form-horizontal" name="fwrite" method="post" action="/admin/news/add_action" enctype="multipart/form-data">
+	<input type="hidden" id="mb_email" name="mb_email" value="<?=$ss_admin['mb_email']?>" />
+
+	<fieldset>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="wr_subject">제목</label>
+			<div class="col-md-9">
+				<input type="text" id="subject" name="subject" class="form-control" value="" maxlength="100"/>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="wr_content">내용</label>
+			<div class="col-md-9">
+				<textarea id="content" name="content" class="form-control" rows="15"></textarea>
+			</div>
+		</div>
+
+		<hr />
+
+		<p class="text-center">
+			<button type="button" id="write_submit" class="btn btn-lg btn-success" data-loading-text="등록 중...">
+				<span class="glyphicon glyphicon-pencil"></span> 글쓰기
+			</button>
+			&nbsp;&nbsp;&nbsp;
+			<button type="button" class="btn btn-lg btn-warning" onclick="document.location.href='/admin/news';">목록</button>
+		</p>
+	</fieldset>
+
+</form>
+
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate_ext.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$('#fwrite').validate({
+			onkeyup : false,
+			rules : {
+				subject : 'required',
+				content : 'required'
+			},
+			messages : {
+				subject : '제목을 입력하세요.',
+				content : '내용을 입력하세요.'
+			}
+		});
+		
+		$('#write_submit').click(function(){
+			$('#fwrite').submit();
+		});
+	});
+</script>

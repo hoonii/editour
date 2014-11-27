@@ -1,0 +1,71 @@
+<form id="pForm" class="form-horizontal" name="pForm">
+	<fieldset>
+		<p style="margin-left: 10px;">반려사유 입력</p>
+		<table class="table table-condensed">
+			<tr>
+				<td>
+					<div class="form-group">
+						<div class="col-md-9">
+							<textarea id="return_reason" name="return_reason" class="form-control" rows="10"></textarea>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<div style="text-align: center;">
+			<button type="button" id="btn_return" class="btn btn-lg btn-danger" data-loading-text="등록 중...">
+				<span class="glyphicon glyphicon-pencil"></span> 반려
+			</button>
+			
+			<button type="button" id="btn_close" class="btn btn-lg btn-success" data-loading-text="등록 중...">
+				<span class="glyphicon glyphicon-pencil"></span> 닫기
+			</button>
+		</div>
+	</fieldset>
+</form>
+
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate_ext.js'></script>
+
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$('#btn_return').click(function(){
+			var seq = '<?=$seq;?>';
+			var return_reason = $('#return_reason').val();
+			
+			if(return_reason == ""){
+				alert("반려 사유를 입력해 주세요.");
+				$('#return_reason').focus();
+				return;
+			}
+			
+			if(confirm("반려 사유를 등록 하시겠습니까?")){
+				$.ajax({
+			 		type: 'POST',
+			 		url : '/admin/publishing/return_reason',
+			 		data : {
+			 			seq: seq,
+			 			status: "03",
+			 			return_reason: return_reason
+			 		},
+			 		success : function(result) {
+			 			if(result > 0){
+			 				alert('처리 되었습니다.');
+			 			}
+			 			
+			 			self.close();
+			 		},
+			 		error : function() {
+			 			alert('오류가 발생하였습니다.');
+			 		},
+			 		async : false
+			 	});
+			}
+		});
+		
+		$('#btn_close').click(function(){
+			self.close();
+		});
+	});
+</script>

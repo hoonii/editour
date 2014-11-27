@@ -1,0 +1,61 @@
+<div>
+	<h3>광고등록 목록</h3>
+</div>
+<div>
+	<p class="pull-right">
+		<button type="button" id="btn_add" class="btn btn-primary">광고등록</button>
+	</p>
+</div>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th style="text-align: center;">번호</th>
+			<th style="text-align: center;">업체명</th>
+			<th style="text-align: center;">업종</th>
+			<th style="text-align: center;">이미지</th>
+			<th style="text-align: center;">기간</th>
+			<th style="text-align: center;">담당자</th>
+			<th style="text-align: center;">연락처</th>
+			<th style="text-align: center;">이메일</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if (count($list) < 1){ ?>
+		<tr>
+			<td colspan="8" style="text-align: center;"">등록된 DATA가 없습니다.</td>
+		</tr>
+		<? } else { ?>
+		<? foreach ($list as $o): ?>
+		<tr>
+			<td style="text-align: center;"><?=$o->num?></td>
+			<td style="text-align: center;"><?=$o->company_name?></td>
+			<td style="text-align: center;"><?=$o->business_type?></td>
+			<td style="text-align: center;">
+				<img src="/admin/advertising/show_advertising_image?seq=<?=$o->seq?>" width="50"/>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->s_dt?> ~ <?=$o->e_dt?>
+			</td>
+			<td style="text-align: center;"><?=$o->in_charge?></td>
+			<td style="text-align: center;"><?=$o->tel?></td>
+			<td style="text-align: center;"><?=$o->email?></td>
+		</tr>
+		<? endforeach; ?>
+		<? } ?>
+	</tbody>
+</table>
+
+<div class="clearfix">
+	<div style="text-align: center;">
+		<?=$paging->create_links()?>
+	</div>
+</div>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$('#btn_add').click(function(){
+			window.open('/admin/advertising/add_popup', 'popup_cupon_add', 'width=520, height=500');
+		});
+	});
+</script>

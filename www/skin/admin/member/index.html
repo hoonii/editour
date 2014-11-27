@@ -1,0 +1,120 @@
+<?
+	//echo $paging->cur_page;
+	//echo $paging->total_rows;
+?>
+<div>
+	<h3>에디투어 사용자 목록</h3>
+</div>
+<form class="form-inline" name="fsearch" method="get" action="/admin/member/index" onsubmit="return member_search();">
+	<div>
+		<p></p>
+		<p class="pull-left">
+			<input type="hidden" id="sfl" name="sfl" class="form-control span3" value="mb_email" /> <input type="text" id="stx" name="stx"
+				class="form-control span3" value="<?=$stx?>" />
+			<button type="submit" class="btn btn-primary">검색</button>
+		</p>
+	</div>
+</form>
+
+<form name="fmemberlist" method="post" action="">
+	<input type="hidden" name="token" value="<?=$token?>" />
+
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>이름</th>
+				<th>이메일</th>
+				<th>보유 포인트</th>
+				<th>가입일</th>
+				<th>구입목록</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?
+				if(count($list) < 1) {
+			?>
+			<tr>
+				<td colspan="5"  style="text-align: center;"">등록된 DATA가 없습니다.</td>
+			</tr>
+			<?
+				} else {
+					foreach ($list as $o):
+			?>
+						<tr>
+							<td>
+								<?=$o->name?>
+							</td>
+							<td>
+								<?=$o->mb_email?>
+							</td>
+							<? if($use_point): ?>
+							<td><a href="javascript:window.open('/admin/point/user?sfl=mb_email&stx=<?=$o->mb_email?>','','width=600,height=500');">
+									<?=$o->point?>P
+							</a></td>
+							<? endif; ?>
+							<td>
+								<?=$o->mb_open_date?>
+							</td>
+							<td><a href="javascript:window.open('/admin/purchase/popup?mb_email=<?=$o->mb_email?>','','width=600,height=500');">상세</a></td>
+						</tr>
+			<?
+					endforeach;
+				}
+			?>
+		</tbody>
+	</table>
+
+	<div class="clearfix">
+		<!-- <button type="button" class="btn btn-info" onclick="slt_check(this.form, '/admin/_trans/member/update')">선택수정</button> -->
+		<!-- <button type="button" class="btn btn-danger" onclick="slt_check(this.form, '/admin/_trans/member/delete')">선택삭제</button> -->
+
+		<div style="text-align: center;">
+			<?=$paging->create_links()?>
+		</div>
+	</div>
+
+</form>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		var stx = '<?=$stx?>';
+		if (stx == '') {
+			$('#stx').val('이메일 입력');
+		}
+		
+		$("#stx").focus(function() {
+			if($('#stx').val() == '' || $('#stx').val() == '이메일 입력'){
+				$('#stx').val('');
+			}
+		});
+		
+		$("#stx").blur(function() {
+			if($('#stx').val() == ''){
+				$('#stx').val('이메일 입력');
+			}
+		});
+	});
+	
+	function member_search(){
+		if($('#stx').val() == '이메일 입력'){
+			$('#stx').val('');
+		}
+		
+		var stx = $('#stx').val().replace(/(^\s*)|(\s*$)/g,'');
+		
+		if(stx.length < 1){
+			alert('검색하실 이메일을 입력해 주세요.');
+			$('#stx').focus();
+			return false;
+		}
+
+		return true;
+	}
+	
+</script>
+<? if ($stx): ?>
+<script type='text/javascript'>
+	document.fsearch.sfl.value = '<?=$sfl?>';
+</script>
+<? endif; ?>

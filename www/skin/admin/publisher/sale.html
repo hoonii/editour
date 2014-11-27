@@ -1,0 +1,116 @@
+<div>
+	<h3>발행자 별 판매 현황</h3>
+</div>
+<form class="form-inline" name="fsearch" method="get" action="/admin/publisher/sale" onsubmit="return sale_search();">
+	<div>
+		<p></p>
+		<p class="pull-left">
+			<input type="text" id="searchKeyword" name="searchKeyword" class="form-control span3" style="width:300px;" value="<?=$searchKeyword?>" />
+			<button type="submit" class="btn btn-primary">검색</button>
+		</p>
+
+		<p class="pull-right">
+			<button type="button" id="btn_refund" class="btn btn-primary">환급 신청 목록</button>
+		</p>
+	</div>
+</form>
+
+<form name="fmemberlist" method="post" action="">
+	<input type="hidden" name="token" value="<?=$token?>" />
+
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th style="text-align: center;">번호</th>
+				<th style="text-align: center;">발행자</th>
+				<th style="text-align: center;">이메일</th>
+				<th style="text-align: center;">누적 판매 포인트</th>
+				<th style="text-align: center;">누적 환급 포인트</th>
+				<th style="text-align: center;">누적 지급금</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?
+				if(count($list) < 1) {
+			?>
+			<tr>
+				<td colspan="6"  style="text-align: center;"">등록된 DATA가 없습니다.</td>
+			</tr>
+			<?
+				} else {
+					foreach ($list as $o):
+			?>
+						<tr>
+							<td style="text-align: center;">
+								<?=$o->num?>
+							</td>
+							<td style="text-align: center;">
+								<?=$o->mb_name?>
+							</td>
+							<td style="text-align: center;">
+								<a href="javascript:window.open('/admin/publisher/refund_popup?searchEmail=<?=$o->mb_email?>','','width=500,height=500');"><?=$o->mb_email?></a>
+							</td>
+							<td style="text-align: center;"><?=$o->sale_price?>P</td>
+							<td style="text-align: center;"><?=$o->refund_price?>P</td>
+							<td style="text-align: center;"><?=$o->pay?>원</td>
+						</tr>
+			<?
+					endforeach;
+				}
+			?>
+		</tbody>
+	</table>
+
+	<div class="clearfix">
+		<!-- <button type="button" class="btn btn-info" onclick="slt_check(this.form, '/admin/_trans/member/update')">선택수정</button> -->
+		<!-- <button type="button" class="btn btn-danger" onclick="slt_check(this.form, '/admin/_trans/member/delete')">선택삭제</button> -->
+
+		<div style="text-align: center;">
+			<?=$paging->create_links()?>
+		</div>
+	</div>
+
+</form>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		var searchKeyword = '<?=$searchKeyword?>';
+		if (searchKeyword == '') {
+			$('#searchKeyword').val('발행자 이름, 혹은 발행자 이메일');
+		}
+		
+		$("#searchKeyword").focus(function() {
+			if($('#searchKeyword').val() == '' || $('#searchKeyword').val() == '발행자 이름, 혹은 발행자 이메일'){
+				$('#searchKeyword').val('');
+			}
+		});
+		
+		$("#searchKeyword").blur(function() {
+			if($('#searchKeyword').val() == ''){
+				$('#searchKeyword').val('발행자 이름, 혹은 발행자 이메일');
+			}
+		});
+		
+		$("#btn_refund").click(function() {
+			location.href = "/admin/refund/index";
+		});
+	});
+	
+	function sale_search(){
+		if($('#searchKeyword').val() == '발행자 이름, 혹은 발행자 이메일'){
+			$('#searchKeyword').val('');
+		}
+		
+		var searchKeyword = $('#searchKeyword').val().replace(/(^\s*)|(\s*$)/g,'');
+		
+		if(searchKeyword.length < 1){
+			alert('검색하실 검색어를 입력해 주세요.');
+			$('#searchKeyword').focus();
+			return false;
+		}
+
+		return true;
+	}
+	
+</script>

@@ -1,0 +1,67 @@
+
+<script type='text/javascript'>
+$(document).ready(function() {
+	<?	for($i=0; $i<sizeof($statics); $i++){	?>
+	<?		${'arr'.$i} = $statics[$i];	?>
+			eval("var ss<?=$i?> = Array();");
+	<?		for($j=0; $j<sizeof(${'arr'.$i}); $j++){	?>
+				ss<?=$i?>.push(<?=${'arr'.$i}[$j]?>);
+	<?		}	?>
+	<?	}	?>
+	
+    plot = $.jqplot('chart', [
+                              <?  if(sizeof($statics) > 0) { ?>
+                              <?  	for($i=0; $i<sizeof($statics); $i++){?>
+                              	      	ss<?=$i?>
+                              <?      	if(($i+1) < sizeof($statics)){	?>
+                              		      ,
+                              <?      	}?>
+                              <?  	}?>
+                              <?  } else {?>
+                              		[
+                              <?  	for($i=0; $i<count($ticks); $i++){ ?>
+                              	  		0
+                              <?      	if(($i+1) < sizeof($ticks)){	?>
+                            		      ,
+                              <?      	}?>
+                              <?  	} ?>
+                                    ]
+                              <?  }?>
+                             ], {
+        seriesDefaults: {
+            renderer:$.jqplot.BarRenderer,
+            pointLabels: { show: true }
+        },
+        <? if(sizeof($series) > 0){ ?>
+        series:[
+		<?
+		for($i=0; $i<sizeof($series); $i++){
+			echo $series[$i];
+			
+			if(($i+1) < count($series)){ echo ","; }
+		} 
+		?>
+        ],
+        legend: {
+            show: true,
+            placement: 'outsideGrid'
+        },
+        <? } ?>
+        axes: {
+            xaxis: {
+                renderer: $.jqplot.CategoryAxisRenderer,
+                ticks:
+                	[
+               		<?
+               		for($i=0; $i<count($ticks); $i++){
+               			echo "'" . $ticks[$i] . "'";
+                       			
+              			if(($i+1) < count($ticks)){ echo ","; }
+              		}
+                	?>
+            		]
+            }
+        }
+    });
+});
+</script>

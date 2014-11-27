@@ -1,0 +1,97 @@
+<div>
+	<h3><?=$title;?></h3>
+</div>
+<form class="form-inline" id="fsearch" name="fsearch" method="get" action="/admin/news/index">
+	<div>
+		<p class="pull-left">
+			<input type="text" id="searchSubject" name="searchSubject" class="form-control span3" value="<?=$searchSubject?>" />
+			<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+		</p>
+	</div>
+</form>
+<br/><br/>
+<table class="table table-condensed table-striped">
+		<p class="pull-right">
+			<button type="button" id="addBtn" class="btn btn-primary">새로 등록</button>
+		</p>
+	<thead>
+		<tr>
+			<th style="text-align: center;">번호</th>
+			<th style="text-align: center;">제목</th>
+			<th style="text-align: center;">작성일</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if (count($list) < 1){ ?>
+		<tr>
+			<td colspan="3" style="text-align: center;"">등록된 DATA가 없습니다.</td>
+		</tr>
+		<? } else { ?>
+		<? foreach ($list as $o): ?>
+		<tr>
+			<td style="text-align: center;">
+				<?=$o->num?>
+			</td>
+			<td style="text-align: center;">
+				<a href="/admin/news/edit?seq=<?=$o->seq?>"><?=$o->subject?></a>
+			</td>
+			<td style="text-align: center;">
+				<?=$o->reg_dt?>
+			</td>
+		</tr>
+		<? endforeach; ?>
+		<? } ?>
+	</tbody>
+</table>
+
+<div class="clearfix">
+	<div style="text-align: center;">
+		<?=$paging->create_links()?>
+	</div>
+</div>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		var searchSubject = '<?=$searchSubject?>';
+		if (searchSubject == '') {
+			$('#searchSubject').val('제목or내용');
+		}
+
+		$("#searchSubject").focus(function() {
+			if ($('#searchSubject').val() == '' || $('#searchSubject').val() == '제목or내용') {
+				$('#searchSubject').val('');
+			}
+		});
+
+		$("#searchSubject").blur(function() {
+			if ($('#searchSubject').val() == '') {
+				$('#searchSubject').val('제목or내용');
+			}
+		});
+		
+		$('#searchBtn').click(function(){
+			news_search();
+		});
+		
+		$('#addBtn').click(function(){
+			location.href = '/admin/news/add';
+		});
+	});
+
+	function news_search() {
+		if ($('#searchSubject').val() == '제목or내용') {
+			$('#searchSubject').val('');
+		}
+	
+		var searchSubject = $('#searchSubject').val().replace(/(^\s*)|(\s*$)/g, '');
+		
+		if (searchSubject.length < 1) {
+			alert('검색어를 입력해 주세요.');
+			$('#searchSubject').focus();
+			return;
+		}
+
+		$('#fsearch').submit();
+	}
+</script>

@@ -1,0 +1,188 @@
+<form id="fwrite" class="form-horizontal" name="fwrite" method="post" action="/admin/advertising/add_submit" enctype="multipart/form-data">
+	<table class="table">
+		<tbody>
+			<tr>
+				<td style="width:100px; text-align: left;">업체명</td>
+				<td style="width:10px;"></td>
+				<td><input type="text" id="company_name" name="company_name" value="" style="width:200px;" /></td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">업종</td>
+				<td style="width:10px;"></td>
+				<td><input type="text" id="business_type" name="business_type" value=""  style="width:200px;" maxlength="20"/></td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">기간</td>
+				<td style="width:10px;"></td>
+				<td>
+					<input type="text" id="s_dt" name="s_dt" readonly="readonly" style="width:100px; margin-right: 5px;" value="" /> 부터
+					
+					<input type="text" id="e_dt" name="e_dt" readonly="readonly" style="width:100px; margin-right: 5px;" value=""/> 까지
+				</td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">담당자</td>
+				<td style="width:10px;"></td>
+				<td><input type="text" id="in_charge" name="in_charge" value=""  style="width:200px;" maxlength="20"/></td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">연락처</td>
+				<td style="width:10px;"></td>
+				<td><input type="text" id="tel" name="tel" value=""  style="width:200px;" maxlength="20"/></td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">이메일</td>
+				<td style="width:10px;"></td>
+				<td><input type="text" id="email" name="email" value=""  style="width:200px;" maxlength="20"/></td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">이미지 업로드</td>
+				<td style="width:10px;"></td>
+				<td><input type="file" id="image" name="image" value=""  style="width:200px;" maxlength="20"/></td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">키워드 선택</td>
+				<td style="width:10px;"></td>
+				<td>
+					<select id="select_keyword" name="select_keyword">
+						<option value="">키워드 목록</option>
+						<? foreach($keywords as $key): ?>
+							<option value="<?=$key['keyword']?>"><?=$key['keyword']?></option>
+						<? endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:100px; text-align: left;">&nbsp;</td>
+				<td style="width:10px;">&nbsp;</td>
+				<td>
+					<textarea rows="2" cols="50" id="keyword" name="keyword"></textarea>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+
+<div class="clearfix">
+	<div style="text-align: center;">
+		<button type="button" id="btn_add" class="btn btn-danger">등록하기</button>
+	</div>
+</div>
+
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate.js'></script>
+<script type='text/javascript' src='<?=JS_DIR?>/jquery/validate_ext.js'></script>
+
+<script type='text/javascript'>
+	$(document).ready(function() {
+		$("#s_dt").datepicker({
+		      showOn: "button",
+		      buttonImage: "/img/calendar.gif",
+		      buttonImageOnly: true,
+		      buttonText: "날짜선택"
+	    });
+		
+		$("#e_dt").datepicker({
+		      showOn: "button",
+		      buttonImage: "/img/calendar.gif",
+		      buttonImageOnly: true,
+		      buttonText: "날짜선택"
+	    });
+		
+		$('#select_keyword').change(function(){
+			if($('#select_keyword').val() != ""){
+				if($('#keyword').val() == ""){
+					$('#keyword').val($('#select_keyword').val());
+				} else {
+					var key = $('#keyword').val();
+					var keys = key.split(",");
+					
+					var cnt = 0;
+					for(var i=0; i<keys.length; i++){
+						if(keys[i] == $('#select_keyword').val()){
+							cnt++;
+						}
+						
+						if((i+1) == keys.length){
+							if(cnt > 0){
+								alert("이미 등록된 키워드 입니다.");
+								return;
+							}
+						}
+					}
+					
+					key = key + "," + $('#select_keyword').val();
+					$('#keyword').val(key);
+				}
+			}
+		});
+		
+		
+		$('#btn_add').click(function(){
+			/*
+			if($('#company_name').val() == ""){
+				alert("업체명을 입력해 주세요.");
+				$('#company_name').focus();
+				return;
+			}
+			if($('#business_type').val() == ""){
+				alert("업종을 입력해 주세요.");
+				$('#business_type').focus();
+				return;
+			}
+			if($('#s_dt').val() == ""){
+				alert("광고기간 시작일을 선택해 주세요.");
+				$('#s_dt').focus();
+				return;
+			}
+			if($('#e_dt').val() == ""){
+				alert("광고기간 종료일을 선택해 주세요.");
+				$('#e_dt').focus();
+				return;
+			}
+			if($('#in_charge').val() == ""){
+				alert("담당자를 입력해 주세요.");
+				$('#in_charge').focus();
+				return;
+			}
+			if($('#tel').val() == ""){
+				alert("연락처를 입력해 주세요.");
+				$('#tel').focus();
+				return;
+			}
+			if($('#email').val() == ""){
+				alert("이메일을 입력해 주세요.");
+				$('#email').focus();
+				return;
+			}
+			*/
+			if(allowCheckFileName($('#image').val()) == false){
+				alert('이미지는 jpg 또는 png 파일만 가능합니다.');
+				return;
+			}
+			
+			if(confirm("광고를 등록 하시겠습니까?")){
+				$('#fwrite').submit();
+			}
+		});
+	});
+	
+	// 허용가능한 화장자 체크
+	function allowCheckFileName(strFileName){
+	    var files    = ["jpg", "png", "JPG", "PNG", "jpeg", "JPEG"];
+	    var isNotUpload = isFileCheck(files, strFileName);
+
+	    return isNotUpload;
+	}
+
+	//확장자 체크 - 종류별
+	function isFileCheck(array, strFileName){
+	    var isNotUpload = false;
+
+	    for( var i=0 ; i < array.length ; i++ ){
+	        if( strFileName.toLowerCase().indexOf( '.'+(array[i].toLowerCase()) ) >= 0 )
+	            isNotUpload = true;
+	    }
+
+	    return isNotUpload;
+	}
+</script>

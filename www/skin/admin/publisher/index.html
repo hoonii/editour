@@ -1,0 +1,104 @@
+<div>
+	<h3>에디투어 발행자 목록</h3>
+</div>
+<form class="form-inline" name="fsearch" method="get" action="/admin/publisher/index" onsubmit="return publisher_search();">
+	<div>
+		<p></p>
+		<p class="pull-left">
+			<input type="text" id="searchEmail" name="searchEmail" class="form-control span3" value="<?=$searchEmail?>" />
+			<button type="submit" class="btn btn-primary">검색</button>
+		</p>
+	</div>
+</form>
+
+<form name="fmemberlist" method="post" action="">
+	<input type="hidden" name="token" value="<?=$token?>" />
+
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>이름</th>
+				<th>이메일</th>
+				<th>발행물 수</th>
+				<th>누적 다운로드 수</th>
+				<th>누적 구매 포인트</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?
+				if(count($list) < 1) {
+			?>
+			<tr>
+				<td colspan="5"  style="text-align: center;"">등록된 DATA가 없습니다.</td>
+			</tr>
+			<?
+				} else {
+					foreach ($list as $o):
+			?>
+						<tr>
+							<td>
+								<?=$o->mb_name?>
+							</td>
+							<td>
+								<?=$o->mb_email?>
+							</td>
+							<td><a href="javascript:window.open('/admin/publishing/popup?searchEmail=<?=$o->mb_email?>','','width=500,height=500');"><?=$o->pub_cnt?>P</a></td>
+							<td><?=$o->cumulative_download?></td>
+							<td><a href="javascript:window.open('/admin/point/publisher?sfl=mb_email&stx=<?=$o->mb_email?>','','width=600,height=500');"><?=$o->cumulative_price?></a></td>
+						</tr>
+			<?
+					endforeach;
+				}
+			?>
+		</tbody>
+	</table>
+
+	<div class="clearfix">
+		<!-- <button type="button" class="btn btn-info" onclick="slt_check(this.form, '/admin/_trans/member/update')">선택수정</button> -->
+		<!-- <button type="button" class="btn btn-danger" onclick="slt_check(this.form, '/admin/_trans/member/delete')">선택삭제</button> -->
+
+		<div style="text-align: center;">
+			<?=$paging->create_links()?>
+		</div>
+	</div>
+
+</form>
+
+<script type='text/javascript' src='<?=JS_DIR?>/sideview.js'></script>
+<script type='text/javascript'>
+	$(document).ready(function() {
+		var searchEmail = '<?=$searchEmail?>';
+		if (searchEmail == '') {
+			$('#searchEmail').val('이메일 입력');
+		}
+		
+		$("#searchEmail").focus(function() {
+			if($('#searchEmail').val() == '' || $('#searchEmail').val() == '이메일 입력'){
+				$('#searchEmail').val('');
+			}
+		});
+		
+		$("#searchEmail").blur(function() {
+			if($('#searchEmail').val() == ''){
+				$('#searchEmail').val('이메일 입력');
+			}
+		});
+	});
+	
+	function publisher_search(){
+		if($('#searchEmail').val() == '이메일 입력'){
+			$('#searchEmail').val('');
+		}
+		
+		var searchEmail = $('#searchEmail').val().replace(/(^\s*)|(\s*$)/g,'');
+		
+		if(searchEmail.length < 1){
+			alert('검색하실 이메일을 입력해 주세요.');
+			$('#searchEmail').focus();
+			return false;
+		}
+
+		return true;
+	}
+	
+</script>
